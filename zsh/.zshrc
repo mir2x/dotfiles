@@ -9,12 +9,20 @@ zstyle ':completion:*' menu select
 eval "$(starship init zsh)"
 
 # Alias
-alias vi='nvim'
+# Directory
 alias mkd='mkdir'
 alias rmd='rm -rf'
 alias cl='clear'
+# Shortcuts
 alias gc='cd ~/.config'
 alias gd='cd /data'
+#Replacements
+alias ls='lsd'
+alias cat='bat'
+alias du='gdu'
+alias top='bpytop'
+alias vi='nvim'
+#Pacman
 alias install='sudo pacman -S'
 alias update='sudo pacman -Syu'
 alias remove='sudo pacman -Rscn'

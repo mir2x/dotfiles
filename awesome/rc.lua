@@ -39,9 +39,9 @@ beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 
 beautiful.font="Lexend Deca Bold 12"
 
-beautiful.useless_gap = 2
+beautiful.useless_gap = 8
 
-beautiful.border_width = 2
+beautiful.border_width = 4
 beautiful.border_focus = "#5a5a5a"
 
 beautiful.bg_normal = "#323232"
