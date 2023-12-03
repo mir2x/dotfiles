@@ -1,0 +1,47 @@
+# Reload 
+alt + period
+	pkill -usr1 -x sxhkd
+# Terminal
+super + Return
+	alacritty
+# Launcher
+alt + d
+	dmenu_run
+# Browser
+alt + b
+	firefox
+alt + ctrl + z
+	firefox-developer-edition
+# File manager
+alt + f
+	thunar
+# Clipboard
+alt + c
+	clipmenu -p "Select:" -l 15
+# Vscodium
+alt + v
+	vscodium
+# Xdman
+alt + x
+	xdman
+super + a; {v,f,t}
+	{vscodium,firefox,thunar}
+super + b; {f, shift+f, b, q}
+	{firefox, firefox-developer-edition, brave-browser-nightly, qutebrowser}
+super + d; {a, d, shift + d, p, v, g, s}
+	{thunar /data/applications, thunar /data/downloads, thunar /data/documents, thunar /data/pictures, thunar /data/videos, thunar /data/games, thunar /data/stash}
+# Mute volume
+shift + F1
+	pulsemixer --toggle-mute
+# Decrease volume by 5
+shift + F2
+	pulsemixer --change-volume -5
+# Increase volume by 5
+shift + F3
+	pulsemixer --change-volume +5
+# Decrease brightness by 10
+shift + F4
+	xbacklight -dec 10
+# Increase brightness by 10
+shift + F5
+	xbacklight -inc 10

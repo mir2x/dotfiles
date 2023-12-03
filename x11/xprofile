@@ -1,0 +1,18 @@
+xrdb ${XDG_CONFIG_HOME:-$HOME/.config}/x11/xresources & xrdbpid=$!	
+xsetroot -xcf /usr/share/icons/macOS-BigSur-White/cursors/left_ptr 28 &
+export XCURSOR_SIZE="28" &
+export GTK_IM_MODULE=ibus &
+export QT_IM_MODULE=ibus &
+export XMODIFIERS=@im=ibus &
+export _JAVA_AWT_WM_NONREPARENTING=1 &
+pipewire &
+sxhkd &
+clipmenud &
+xsettingsd & 
+udiskie &
+picom --experimental-backend &
+ibus-daemon &
+lxpolkit & 
+cbatticon &
+setbg &
+[ -n "$xrdbpid" ] && wait "$xrdbpid"
