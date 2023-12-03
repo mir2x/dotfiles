@@ -20,12 +20,16 @@ alias gd='cd /data'
 alias ls='lsd'
 alias cat='bat'
 alias du='gdu'
+alias df='duf'
 alias top='bpytop'
 alias vi='nvim'
 #Pacman
 alias install='sudo pacman -S'
 alias update='sudo pacman -Syu'
 alias remove='sudo pacman -Rscn'
+#Git
+alias gst='git status'
+alias gcmsg='git commit -m'
 
 # Fish-like syntax highlighting and autosuggestions
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
