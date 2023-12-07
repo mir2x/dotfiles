@@ -5,7 +5,7 @@ alt + period
 super + Return
 	alacritty
 # Launcher
-alt + d
+alt + r
 	dmenu_run
 # Browser
 alt + b
