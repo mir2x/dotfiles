@@ -1,0 +1,69 @@
+# Reload 
+alt + period
+	pkill -usr1 -x sxhkd
+
+# Terminal
+super + Return
+	alacritty
+
+# Launcher
+# dmenu
+alt + space
+	rofi -show drun
+# run
+alt + d
+	rofi -show run
+# windows
+alt + w
+	rofi -show window
+# menu
+control + button3
+	jgmenu --at-pointer
+
+# Browser
+alt + b
+	zen-browser
+
+# File manager
+alt + f
+	nemo
+alt + control + f
+	alacritty -e ranger
+
+# Toggle Picom
+alt + t
+	toggle picom
+
+# Vscode
+alt + v
+	code
+# Xdman
+alt + x
+	xdman-beta
+
+# Flameshot
+Print
+	flameshot gui
+
+# Color Picker
+alt + z
+	xcolor -s -f rgb
+alt + s
+	skypeforlinux
+
+# Mute volume
+XF86AudioMute
+	pulsemixer --toggle-mute
+# Decrease volume by 5
+XF86AudioLowerVolume
+	pulsemixer --change-volume -5
+# Increase volume by 5
+XF86AudioRaiseVolume
+	pulsemixer --change-volume +5
+
+# Decrease brightness by 10
+XF86MonBrightnessDown
+	light -U 10
+# Increase brightness by 10
+XF86MonBrightnessUp
+	light -A 10

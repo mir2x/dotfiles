@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Set your network interface (e.g., eth0, wlan0)
+INTERFACE="wlo1"
+
+# Run the compiled C program and get the output
+net-speed $INTERFACE
+

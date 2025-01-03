@@ -1,0 +1,38 @@
+add_newline = false
+format="""
+$os \
+$username \
+$directory \
+$git_branch\
+$git_state\
+$git_status\
+$line_break\
+$character \
+"""
+
+[os]
+disabled = false
+style = "fg:#f07178"
+
+[os.symbols]
+Arch = "󰣇"
+
+[username]
+show_always = true
+style_user = "fg:#ffcb6b"
+style_root = "fg:#ffcb6b"
+format = '[$user]($style) in'
+disabled = false
+
+[directory]
+style = "bold fg:#89ddff"
+format = '[$path]($style)'
+disabled = false
+
+[git_branch]
+symbol = " "
+style = "fg:#c792ea"
+
+[character]
+success_symbol = '[➜](bold fg:#c3e88d)'
+error_symbol = '[➜](bold fg:#c3e88d)'
