@@ -1,8 +1,8 @@
 general.import = ["~/.config/alacritty/themes/adwaita.toml"]
 
 [font]
-normal = {family = "FiraMono Nerd Font Medium", style = "Medium"}
-size = 9.0
+normal = {family = "FantasqueSansM Nerd Font Mono", style = "Regular"}
+size = 12.0
 
 [cursor]
 style = "Beam"
