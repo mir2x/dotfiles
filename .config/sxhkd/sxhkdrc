@@ -47,7 +47,7 @@ Print
 
 # Color Picker
 alt + z
-	xcolor -s -f rgb
+	xcolor -s -f hex
 alt + s
 	skypeforlinux
 

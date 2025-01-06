@@ -3,7 +3,7 @@ vim.g.maplocalleader = "\\"
 
 local keymap = vim.keymap
 
-keymap.set("n", "<leader>ee", vim.cmd.Ex)
+-- keymap.set("n", "<leader>ee", vim.cmd.Ex)
 keymap.set("n", "<leader>ch", ":nohl<CR>")
 
 keymap.set("n", "<leader>sv", "<C-w>v")

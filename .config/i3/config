@@ -1,6 +1,6 @@
 set $mod Mod4
 
-font pango: Fantasque Sans Mono 11
+font pango: Fantasque Sans Mono Bold 12
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -128,7 +128,8 @@ for_window [class="Xdm-app"] floating enable
 for_window [class="Blueberry.py"] floating enable
 for_window [class="copyq"] floating enable
 
-set $bar_bg #0A0E14
+set $bar_bg #1e1e1e
+set $focused_bg #15539e
 set $bar_fg #c5c8c6
 set $border #292f3b
 set $inactive_bg  #222222
@@ -137,7 +138,7 @@ set $urgent_bg  #ff5c8d
 
 # i3bar settings 
 bar {
-    font pango:Fantasque Sans Mono, FontAwesome 14
+    font pango:Fantasque Sans Mono 15
     position top
     height 20
     status_command SCRIPT_DIR=~/.config/i3blocks /usr/bin/i3blocks
@@ -145,17 +146,17 @@ bar {
     colors {
         background $bar_bg
         statusline $bar_fg
-        #Workspace	       #Border  #Background  #Text	
-				focused_workspace  $border  $bar_bg      $bar_fg
-        inactive_workspace $border  $inactive_bg $bar_fg
-        urgent_workspace   $border  $urgent_bg   $bar_fg 
+        #Workspace	       #Border      #Background  #Text	
+				focused_workspace  $focused_bg  $focused_bg  $bar_fg
+        inactive_workspace $border      $inactive_bg $bar_fg
+        urgent_workspace   $border      $urgent_bg   $bar_fg 
     }
 }
 
 # Window borders and background colors
-client.focused           $border  $bar_bg      $bar_fg
-client.unfocused         $border  $inactive_bg $bar_fg
-client.urgent            $border  $urgent_bg   $bar_fg
+client.focused           $focused_bg  $focused_bg  $bar_fg
+client.unfocused         $border      $inactive_bg $bar_fg
+client.urgent            $border      $urgent_bg   $bar_fg
 
 # Remove window borders for all windows
 for_window [class="^.*"] border pixel 0

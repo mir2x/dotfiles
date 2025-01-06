@@ -4,12 +4,12 @@
 * {
     font:   "Monaspace Radon Bold 14";
 
-    bg0:    #44475a;
+    bg0:    #282828;
     bg1:    #7E7E7E80;
-    bg2:    #282a36;
+    bg2:    #15539e;
 
-    fg0:    #DEDEDE;
-    fg1:    #ff89c6;
+    fg0:    #e4eaea;
+    fg1:    #e4eaea;
     fg2:    #DEDEDE80;
 
     background-color:   transparent;
