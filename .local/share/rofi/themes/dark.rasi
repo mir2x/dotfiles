@@ -2,7 +2,7 @@
 /* Author: Newman Sanchez (https://github.com/newmanls) */
 
 * {
-    font:   "Monaspace Radon Bold 14";
+    font:   "Fantasque Sans Mono Bold 16";
 
     bg0:    #282828;
     bg1:    #7E7E7E80;
@@ -29,7 +29,7 @@ window {
 }
 
 inputbar {
-    font:       "Monaspace Radon Bold 24";
+    font:       "Fantasque Sans Mono Bold Bold 24";
     padding:    12px;
     spacing:    12px;
     children:   [ icon-search, entry ];
