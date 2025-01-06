@@ -1,6 +1,6 @@
 set $mod Mod4
 
-font pango: Fantasque Sans Mono Bold 12
+font pango: Fantasque Sans Mono Bold 11
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -138,7 +138,7 @@ set $urgent_bg  #ff5c8d
 
 # i3bar settings 
 bar {
-    font pango:Fantasque Sans Mono 15
+    font pango:Fantasque Sans Mono 13
     position top
     height 20
     status_command SCRIPT_DIR=~/.config/i3blocks /usr/bin/i3blocks
