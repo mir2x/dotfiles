@@ -84,3 +84,8 @@
 bootstrap.sh
 packages
 README.md
+
+# fcitx5 regenerates these itself
+.config/fcitx5/crash.log
+.config/fcitx5/conf/cached_layouts
+.config/fcitx5/conf/notifications.conf
