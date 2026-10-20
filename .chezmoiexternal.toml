@@ -9,3 +9,10 @@
     type = "git-repo"
     url = "https://github.com/EliverLara/Andromeda-gtk.git"
     refreshPeriod = "168h"
+
+# Lilex Nerd Font (official Nerd Fonts release; ~3 MB, keeps fonts out of git)
+[".local/share/fonts/Lilex"]
+    type = "archive"
+    url = "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Lilex.tar.xz"
+    include = ["*.ttf"]
+    refreshPeriod = "720h"

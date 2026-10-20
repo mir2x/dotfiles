@@ -64,6 +64,7 @@ grep -qi nvidia <<<"$gpu" && sudo systemctl enable nvidia-suspend nvidia-resume 
 
 echo "==> Dotfiles"
 chezmoi apply -v
+fc-cache -f   # pick up the Lilex fonts that chezmoi just downloaded
 
 echo
 echo "Done. Next, by hand: set fish as the login shell (chsh -s /usr/bin/fish),"
