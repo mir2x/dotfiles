@@ -64,7 +64,6 @@ noto-fonts-emoji
 nwg-look
 obs-studio
 openssh
-os-prober
 pacman-contrib
 pavucontrol
 pipewire-pulse
