@@ -63,7 +63,9 @@ sudo systemctl enable --now NetworkManager bluetooth tailscaled
 grep -qi nvidia <<<"$gpu" && sudo systemctl enable nvidia-suspend nvidia-resume nvidia-hibernate || true
 
 echo "==> Dotfiles"
-chezmoi apply -v
+# --force: this is a fresh install, and apps (fcitx5, xdg-user-dirs, ...) may have
+# already rewritten their own config, which would otherwise trigger an overwrite prompt.
+chezmoi apply -v --force
 fc-cache -f   # pick up the Lilex fonts that chezmoi just downloaded
 
 echo
