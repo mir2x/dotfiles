@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Regenerates the cached blurred lockscreen image.
+# Run this again after changing your wallpaper.
+set -euo pipefail
+
+SRC="${1:-/home/mir/.local/share/backgrounds/lockscreen.png}"
+OUT="/home/mir/.local/share/backgrounds/lockscreen-fancy.png"
+
+convert "$SRC" \
+  -level "0%,100%,0.6" \
+  -filter Gaussian -resize 20% -define "filter:sigma=1.5" -resize 500.5% \
+  -resize 1920x1200! \
+  "$OUT"
+
+echo "Rendered $OUT"

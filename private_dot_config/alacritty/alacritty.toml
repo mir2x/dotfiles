@@ -1,0 +1,11 @@
+[font]
+size = 14
+
+[font.normal]
+family = "Lilex Nerd Font Mono"
+style = "Medium"
+
+[[keyboard.bindings]]
+key = "Return"
+mods = "Shift"
+chars = "\u001B\r"

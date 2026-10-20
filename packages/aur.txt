@@ -1,0 +1,17 @@
+apple_cursor
+blueberry
+claude-code
+claude-desktop
+cloudflare-warp-bin
+code-features
+code-marketplace
+dwarfs-bin
+flat-remix
+helium-browser-bin
+localsend-bin
+nomacs
+qt5ct-kde
+qt6ct-kde
+slack-desktop
+sunshine-bin
+typora

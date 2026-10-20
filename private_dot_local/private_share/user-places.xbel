@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xbel>
+<xbel xmlns:bookmark="http://www.freedesktop.org/standards/desktop-bookmarks" xmlns:kdepriv="http://www.kde.org/kdepriv" xmlns:mime="http://www.freedesktop.org/standards/shared-mime-info">
+ <info>
+  <metadata owner="http://www.kde.org">
+   <kde_places_version>4</kde_places_version>
+   <GroupState-Places-IsHidden>false</GroupState-Places-IsHidden>
+   <GroupState-Remote-IsHidden>false</GroupState-Remote-IsHidden>
+   <GroupState-Devices-IsHidden>false</GroupState-Devices-IsHidden>
+   <GroupState-RemovableDevices-IsHidden>false</GroupState-RemovableDevices-IsHidden>
+   <GroupState-Tags-IsHidden>false</GroupState-Tags-IsHidden>
+   <withBaloo>true</withBaloo>
+   <GroupState-SearchFor-IsHidden>false</GroupState-SearchFor-IsHidden>
+   <GroupState-RecentlySaved-IsHidden>false</GroupState-RecentlySaved-IsHidden>
+  </metadata>
+ </info>
+ <bookmark href="file:///home/mir">
+  <title>Home</title>
+  <info>
+   <metadata owner="http://freedesktop.org">
+    <bookmark:icon name="user-home"/>
+   </metadata>
+   <metadata owner="http://www.kde.org">
+    <ID>1791962941/0</ID>
+    <isSystemItem>true</isSystemItem>
+   </metadata>
+  </info>
+ </bookmark>
+ <bookmark href="file:///home/mir/Downloads">
+  <title>Downloads</title>
+  <info>
+   <metadata owner="http://freedesktop.org">
+    <bookmark:icon name="folder-download"/>
+   </metadata>
+   <metadata owner="http://www.kde.org">
+    <ID>1791977934/0</ID>
+   </metadata>
+  </info>
+ </bookmark>
+ <bookmark href="file:///home/mir/projects">
+  <title>Projects</title>
+  <info>
+   <metadata owner="http://freedesktop.org">
+    <bookmark:icon name="inode-directory"/>
+   </metadata>
+   <metadata owner="http://www.kde.org">
+    <ID>1791978980/0</ID>
+   </metadata>
+  </info>
+ </bookmark>
+ <bookmark href="remote:/">
+  <title>Network</title>
+  <info>
+   <metadata owner="http://freedesktop.org">
+    <bookmark:icon name="folder-network"/>
+   </metadata>
+   <metadata owner="http://www.kde.org">
+    <ID>1791962941/1</ID>
+    <isSystemItem>true</isSystemItem>
+   </metadata>
+  </info>
+ </bookmark>
+ <bookmark href="trash:/">
+  <title>Trash</title>
+  <info>
+   <metadata owner="http://freedesktop.org">
+    <bookmark:icon name="user-trash"/>
+   </metadata>
+   <metadata owner="http://www.kde.org">
+    <ID>1791962941/2</ID>
+    <isSystemItem>true</isSystemItem>
+   </metadata>
+  </info>
+ </bookmark>
+ <bookmark href="timeline:/today">
+  <title>Modified Today</title>
+  <info>
+   <metadata owner="http://freedesktop.org">
+    <bookmark:icon name="go-jump-today"/>
+   </metadata>
+   <metadata owner="http://www.kde.org">
+    <ID>1791962941/3</ID>
+    <isSystemItem>true</isSystemItem>
+   </metadata>
+  </info>
+ </bookmark>
+ <bookmark href="timeline:/yesterday">
+  <title>Modified Yesterday</title>
+  <info>
+   <metadata owner="http://freedesktop.org">
+    <bookmark:icon name="view-calendar-day"/>
+   </metadata>
+   <metadata owner="http://www.kde.org">
+    <ID>1791962941/4</ID>
+    <isSystemItem>true</isSystemItem>
+   </metadata>
+  </info>
+ </bookmark>
+ <separator>
+  <info>
+   <metadata owner="http://www.kde.org">
+    <UDI>/org/freedesktop/UDisks2/block_devices/nvme0n1p3</UDI>
+    <isSystemItem>true</isSystemItem>
+    <uuid>2a0acf7c0acf4413</uuid>
+   </metadata>
+  </info>
+ </separator>
+ <separator>
+  <info>
+   <metadata owner="http://www.kde.org">
+    <UDI>/org/freedesktop/UDisks2/block_devices/nvme1n1p2</UDI>
+    <isSystemItem>true</isSystemItem>
+    <uuid>27813f93-8309-41ec-9a49-674a2115b7e6</uuid>
+   </metadata>
+  </info>
+ </separator>
+</xbel>

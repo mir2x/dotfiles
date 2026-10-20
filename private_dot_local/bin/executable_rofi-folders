@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Pick a favourite folder with rofi and open it in Dolphin (a new tab in the running window).
+# Folders live in ~/.config/rofi/folders.txt (and optionally folders.private.txt), one "Label|path" per line.
+
+cfg="${XDG_CONFIG_HOME:-$HOME/.config}/rofi"
+lists=("$cfg/folders.txt" "$cfg/folders.private.txt")
+[ -f "${lists[0]}" ] || { echo "rofi-folders: missing ${lists[0]}" >&2; exit 1; }
+
+labels=()
+paths=()
+for list in "${lists[@]}"; do
+[ -f "$list" ] || continue
+while IFS= read -r line; do
+    [[ -z "${line//[[:space:]]/}" || "$line" =~ ^[[:space:]]*# ]] && continue
+    label="${line%%|*}"
+    path="${line#*|}"
+    label="${label#"${label%%[![:space:]]*}"}"; label="${label%"${label##*[![:space:]]}"}"
+    path="${path#"${path%%[![:space:]]*}"}";   path="${path%"${path##*[![:space:]]}"}"
+    path="${path/#\~/$HOME}"
+    [ -d "$path" ] || continue
+    labels+=("$label")
+    paths+=("$path")
+done < "$list"
+done
+
+[ "${#labels[@]}" -gt 0 ] || exit 0
+
+idx=$(printf '%s\n' "${labels[@]}" | rofi -dmenu -i -p "folder" -format i) || exit 0
+[ -n "$idx" ] || exit 0
+
+exec dolphin "${paths[$idx]}"

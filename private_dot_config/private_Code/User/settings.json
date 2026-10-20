@@ -1,0 +1,9 @@
+{
+    "claudeCode.preferredLocation": "panel",
+    "claudeCode.hideOnboarding": true,
+    "editor.fontFamily": "'Lilex Nerd Font Mono', 'Droid Sans Mono', monospace",
+    "editor.fontSize": 16,
+    "editor.fontLigatures": true,
+    "explorer.confirmDragAndDrop": false,
+    "explorer.confirmDelete": false
+}

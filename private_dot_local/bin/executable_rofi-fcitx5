@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROFI=(rofi -dmenu -i -p "Input Method" -format i)
+
+PROFILE="${XDG_CONFIG_HOME:-$HOME/.config}/fcitx5/profile"
+
+command -v fcitx5-remote >/dev/null 2>&1 || {
+  echo "fcitx5-remote not found. Install fcitx5." >&2
+  exit 1
+}
+
+[[ -r "$PROFILE" ]] || {
+  echo "Cannot read: $PROFILE" >&2
+  echo "Tip: open fcitx5-configtool once to generate it." >&2
+  exit 1
+}
+
+# Extract IM names from profile entries like:
+# [Groups/0/Items/0]
+# Name=keyboard-us
+mapfile -t ims < <(
+  awk '
+    /^\[Groups\/[0-9]+\/Items\/[0-9]+\]$/ { want=1; next }
+    want && /^Name=/ { sub(/^Name=/,""); print; want=0 }
+  ' "$PROFILE" | awk '!seen[$0]++'
+)
+
+((${#ims[@]})) || {
+  echo "No input methods found in $PROFILE" >&2
+  exit 1
+}
+
+current="$(fcitx5-remote -n 2>/dev/null || true)"
+
+# Build labels (pretty-ish but still unambiguous)
+labels=()
+for im in "${ims[@]}"; do
+  label="$im"
+  if [[ "$im" == keyboard-* ]]; then
+    label="Keyboard — ${im#keyboard-}"
+  fi
+  if [[ "$im" == "$current" ]]; then
+    label="✓ $label"
+  fi
+  labels+=("$label")
+done
+
+idx="$(printf '%s\n' "${labels[@]}" | "${ROFI[@]}")"
+[[ -z "${idx}" ]] && exit 0
+
+im="${ims[$idx]}"
+fcitx5-remote -s "$im"
+

@@ -1,0 +1,6 @@
+#!/bin/sh
+# Toggle the focused scrolling column between full width and half width
+w=$(hyprctl -j activewindow | jq '.size[0]')
+mw=$(hyprctl -j monitors | jq '.[] | select(.focused) | .width')
+if [ "$w" -ge $((mw - 40)) ]; then v=0.5; else v=1.0; fi
+hyprctl dispatch "hl.dsp.layout(\"colresize $v\")"

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Flameshot region capture that works on one or many monitors:
+# the overlay spans the whole virtual desktop, so pin it to the top-left of
+# the bounding box of all monitors (may be negative) once its window appears.
+read -r x y < <(hyprctl monitors -j | jq -r '[min_by(.x).x, min_by(.y).y] | "\(.[0]) \(.[1])"')
+
+flameshot gui "$@" &
+pid=$!
+
+for _ in $(seq 40); do
+    addr=$(hyprctl clients -j | jq -r '.[] | select(.class=="flameshot") | .address' | head -n1)
+    [ -n "$addr" ] && break
+    sleep 0.05
+done
+[ -n "$addr" ] && hyprctl dispatch "hl.dsp.window.move({ x = $x, y = $y, window = \"address:$addr\" })" >/dev/null
+wait $pid

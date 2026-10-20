@@ -1,0 +1,7 @@
+[General]
+theme=Andromeda
+
+[Applications]
+Andromeda=dolphin
+Default=dophin
+KvSimplicityDark=dolphin

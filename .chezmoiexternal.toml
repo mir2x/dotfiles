@@ -1,0 +1,11 @@
+# Neovim config lives in its own repo; cloned on new machines.
+[".config/nvim"]
+    type = "git-repo"
+    url = "https://github.com/mir2x/nvim-config.git"
+    refreshPeriod = "168h"
+
+# GTK theme (public upstream repo)
+[".local/share/themes/Andromeda-gtk"]
+    type = "git-repo"
+    url = "https://github.com/EliverLara/Andromeda-gtk.git"
+    refreshPeriod = "168h"

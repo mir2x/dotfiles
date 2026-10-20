@@ -1,0 +1,81 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 30,
+    "margin-top": 4,
+    "margin-left": 8,
+    "margin-right": 8,
+    "spacing": 6,
+    "modules-left": [
+        "niri/workspaces",
+        "niri/window"
+    ],
+    "modules-center": [],
+    "modules-right": [
+        "pulseaudio",
+        "network",
+        "cpu",
+        "memory",
+        "battery",
+        "clock",
+        "tray"
+    ],
+    "niri/workspaces": {
+        "format": "{index}",
+        "all-outputs": false
+    },
+    "niri/window": {
+        "max-length": 50,
+        "separate-outputs": true
+    },
+    "pulseaudio": {
+        "format": "{icon}  {volume}%",
+        "format-muted": "<span size='130%'>\uf026</span>  muted",
+        "format-bluetooth": "<span size='130%'>\uf293</span>  {volume}%",
+        "format-icons": {
+            "default": [
+                "<span size='130%'>\uf027</span>",
+                "<span size='130%'>\uf028</span>"
+            ]
+        },
+        "on-click": "pavucontrol"
+    },
+    "network": {
+        "interval": 2,
+        "format-wifi": "<span size='130%'>\uf019</span>  {bandwidthDownBytes}  <span size='130%'>\uf093</span>  {bandwidthUpBytes}",
+        "format-ethernet": "<span size='130%'>\uf019</span>  {bandwidthDownBytes}  <span size='130%'>\uf093</span>  {bandwidthUpBytes}",
+        "format-disconnected": "<span size='130%'>\uf071</span>  offline",
+        "tooltip-format": "{essid}  {ifname}  {ipaddr}  {signalStrength}%"
+    },
+    "cpu": {
+        "format": "<span size='130%'>\uf2db</span>  {usage}%",
+        "interval": 5
+    },
+    "memory": {
+        "format": "<span size='130%'>\udb81\ude1a</span>  {used:0.1f} GiB ({percentage}%)",
+        "tooltip-format": "{used:0.1f} GiB used of {total:0.1f} GiB\nSwap: {swapUsed:0.1f} / {swapTotal:0.1f} GiB",
+        "interval": 5
+    },
+    "battery": {
+        "format": "{icon}  {capacity}%",
+        "format-charging": "<span size='130%'>\uf0e7</span>  {capacity}%",
+        "format-icons": [
+            "<span size='130%'>\uf244</span>",
+            "<span size='130%'>\uf243</span>",
+            "<span size='130%'>\uf242</span>",
+            "<span size='130%'>\uf241</span>",
+            "<span size='130%'>\uf240</span>"
+        ],
+        "states": {
+            "warning": 25,
+            "critical": 10
+        }
+    },
+    "clock": {
+        "format": "<span size='130%'>\uf017</span>  {:%a %d %b  %H:%M}",
+        "tooltip-format": "{:%A, %d %B %Y}"
+    },
+    "tray": {
+        "spacing": 8
+    }
+}

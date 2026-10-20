@@ -1,0 +1,188 @@
+#!/bin/bash
+
+# ==========================================
+# Video Processor: Cut & Extract
+# Requires: ffmpeg, ffprobe, fzf
+# ==========================================
+
+# Safety: Exit on error
+set -e
+
+# --- Configuration & Colors ---
+BOLD='\033[1m'
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Cleanup function to restore cursor and remove temp files
+cleanup() {
+    tput cnorm
+    rm -f /tmp/ffmpeg_progress
+}
+trap cleanup EXIT INT TERM
+
+# --- Dependencies Check ---
+check_deps() {
+    local deps=("ffmpeg" "ffprobe" "fzf")
+    for cmd in "${deps[@]}"; do
+        if ! command -v "$cmd" &> /dev/null; then
+            echo -e "${RED}Error: Required command '$cmd' is not installed.${NC}"
+            exit 1
+        fi
+    done
+}
+
+# --- Helper: Convert timestamp to seconds ---
+time_to_seconds() {
+    local input=$1
+    if [[ "$input" == *":"* ]]; then
+        echo "$input" | awk -F: '{ if (NF==3) print ($1 * 3600) + ($2 * 60) + $3; else if (NF==2) print ($1 * 60) + $2; }'
+    else
+        echo "$input"
+    fi
+}
+
+# --- Helper: Get Video Duration ---
+get_duration() {
+    ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$1"
+}
+
+# --- Helper: Select File with FZF ---
+select_file() {
+    # FIX: Send prompt to stderr (>2) so it is NOT captured in the variable
+    echo -e "${BLUE}Select a video file (Press Enter):${NC}" >&2
+    
+    local file
+    # Use fzf to select file
+    file=$(find . -maxdepth 1 -type f | grep -E "\.(mp4|mkv|mov|avi|flv|webm)$" | fzf --height=20% --layout=reverse --border --prompt="Select Video > ")
+    
+    if [[ -z "$file" ]]; then
+        echo -e "${RED}No file selected. Returning to menu.${NC}" >&2
+        return 1
+    fi
+    # Only the filename goes to stdout
+    echo "$file"
+}
+
+# --- Helper: Progress Bar ---
+run_ffmpeg_with_progress() {
+    local total_duration=$1
+    local desc=$2
+    shift 2
+    local cmd=("$@")
+
+    echo -e "${GREEN}$desc...${NC}"
+    tput civis
+
+    "${cmd[@]}" -progress pipe:1 2>&1 | while read -r line; do
+        if [[ "$line" == "out_time_us="* ]]; then
+            current_us=${line#*=}
+            if [[ "$current_us" == "N/A" ]] || [[ "$current_us" -lt 0 ]]; then continue; fi
+
+            percent=$(awk -v cur="$current_us" -v tot="$total_duration" 'BEGIN { printf "%.0f", (cur / 1000000 / tot) * 100 }')
+            if [[ "$percent" -gt 100 ]]; then percent=100; fi
+
+            width=50
+            filled=$(awk -v p="$percent" -v w="$width" 'BEGIN { printf "%.0f", (p / 100) * w }')
+            empty=$((width - filled))
+            
+            bar=$(printf "%0.s#" $(seq 1 $filled))
+            space=$(printf "%0.s-" $(seq 1 $empty))
+            
+            printf "\r[${BLUE}%s${NC}%s] ${BOLD}%3d%%${NC}" "$bar" "$space" "$percent"
+        fi
+    done
+    echo ""
+    tput cnorm
+}
+
+# --- Operation 1: Cut Video ---
+cut_video() {
+    local input
+    input=$(select_file) || return
+
+    echo -e "${BOLD}Input File:${NC} $input"
+    
+    read -p "Start time (HH:MM:SS or seconds): " start_time
+    read -p "End time   (HH:MM:SS or seconds): " end_time
+    read -p "Output filename (e.g., cut_video.mp4): " output_name
+
+    if [[ -z "$start_time" || -z "$end_time" || -z "$output_name" ]]; then
+        echo -e "${RED}Error: All fields are required.${NC}"
+        return
+    fi
+
+    local s_sec
+    s_sec=$(time_to_seconds "$start_time")
+    local e_sec
+    e_sec=$(time_to_seconds "$end_time")
+    local duration
+    duration=$(echo "$e_sec - $s_sec" | bc)
+
+    if (( $(echo "$duration <= 0" | bc -l) )); then
+        echo -e "${RED}Error: End time must be greater than start time.${NC}"
+        return
+    fi
+
+    cmd=(ffmpeg -y -ss "$start_time" -to "$end_time" -i "$input" -c:v libx264 -c:a aac -strict experimental "$output_name")
+    run_ffmpeg_with_progress "$duration" "Cutting Video" "${cmd[@]}"
+    
+    echo -e "${GREEN}Video saved to: $output_name${NC}"
+}
+
+# --- Operation 2: Extract Images ---
+extract_images() {
+    local input
+    input=$(select_file) || return
+
+    # Debug check to ensure variable is clean
+    if [[ ! -f "$input" ]]; then
+        echo -e "${RED}Error: File '$input' not found (Selection error).${NC}"
+        return
+    fi
+
+    echo -e "${BOLD}Input File:${NC} $input"
+    
+    read -p "Output folder name: " out_folder
+    read -p "Frame rate (e.g., 1 for 1/sec, 0.5 for 1 every 2s): " fps
+
+    if [[ -z "$out_folder" ]]; then out_folder="extracted_frames"; fi
+    if [[ -z "$fps" ]]; then fps="1"; fi
+
+    mkdir -p "$out_folder"
+
+    local duration
+    duration=$(get_duration "$input")
+
+    # Use q:v 2 for high quality frames
+    cmd=(ffmpeg -y -i "$input" -vf "fps=$fps" -q:v 2 "$out_folder/frame_%04d.jpg")
+
+    run_ffmpeg_with_progress "$duration" "Extracting Frames" "${cmd[@]}"
+
+    echo -e "${GREEN}Frames extracted to: $out_folder/${NC}"
+}
+
+# --- Main Menu ---
+main() {
+    check_deps
+    
+    while true; do
+        echo -e "\n${BOLD}=== FFmpeg Media Tool ===${NC}"
+        echo "1) Cut a Video"
+        echo "2) Extract Images from Video"
+        echo "3) Exit"
+        read -p "Select an option [1-3]: " choice
+
+        case $choice in
+            1) cut_video ;;
+            2) extract_images ;;
+            3) echo "Goodbye!"; exit 0 ;;
+            *) echo -e "${RED}Invalid option.${NC}" ;;
+        esac
+        
+        echo -e "\n-----------------------------"
+    done
+}
+
+main

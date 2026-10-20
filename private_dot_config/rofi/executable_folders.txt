@@ -1,0 +1,13 @@
+# Favourite folders for the rofi folder picker (Super+Alt+G).
+# One per line:  Label|path   (~ is allowed; a line with no "|" uses the path as its label)
+# Lines starting with # and blank lines are ignored. Missing folders are skipped.
+# Project-specific entries live in folders.private.txt (not in the public repo).
+Home|~
+Dev|~/dev
+Projects|~/dev/projects
+Downloads|~/Downloads
+Documents|~/Documents
+Pictures|~/Pictures
+
+Fish config|~/.config/fish
+Hypr config|~/.config/hypr

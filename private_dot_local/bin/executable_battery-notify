@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+while true; do
+  level=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 \
+          | awk '/percentage:/ {print int($2)}')
+  if (( level <= 15 )); then
+    notify-send -u critical "Battery low: ${level}%"
+  fi
+  sleep 300
+done

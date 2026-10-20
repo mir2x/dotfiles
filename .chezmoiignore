@@ -1,0 +1,86 @@
+# Safety net: nothing below is ever managed or applied by chezmoi.
+# Paths are relative to $HOME. Install to: ~/.local/share/chezmoi/.chezmoiignore
+
+# --- Browser / app data (sessions, cookies, caches) ---
+.config/mozilla
+.mozilla
+.config/net.imput.helium
+.config/discord
+.config/Claude
+.config/Typora
+.config/Podman Desktop
+# VS Code: keep only User/settings.json and User/snippets
+.config/Code/.org.chromium.Chromium.kaHAnE
+.config/Code/Backups
+.config/Code/Cache
+.config/Code/CachedConfigurations
+.config/Code/CachedData
+.config/Code/CachedExtensionVSIXs
+.config/Code/CachedProfilesData
+.config/Code/Code Cache
+.config/Code/Cookies
+.config/Code/Cookies-journal
+.config/Code/Crashpad
+.config/Code/DIPS
+.config/Code/DawnGraphiteCache
+.config/Code/DawnWebGPUCache
+.config/Code/Dictionaries
+.config/Code/GPUCache
+.config/Code/Local State
+.config/Code/Local Storage
+.config/Code/Network Persistent State
+.config/Code/Partitions
+.config/Code/Preferences
+.config/Code/Service Worker
+.config/Code/Session Storage
+.config/Code/Shared Dictionary
+.config/Code/SharedStorage
+.config/Code/TransportSecurity
+.config/Code/Trust Tokens
+.config/Code/Trust Tokens-journal
+.config/Code/WebStorage
+.config/Code/agent-host
+.config/Code/blob_storage
+.config/Code/languagepacks.json
+.config/Code/logs
+.config/Code/machineid
+.config/Code/User/History
+.config/Code/User/chatLanguageModels.json
+.config/Code/User/globalStorage
+.config/Code/User/workspaceStorage
+
+# --- Keys and credentials ---
+.config/.android
+.android
+.ssh/id_*
+.gnupg/private-keys-v1.d
+.config/sunshine
+.config/transmission
+.config/pulse
+.config/containers
+
+# --- Clipboard history (may contain passwords) ---
+.config/copyq/*.dat
+.config/copyq/.copyq_s
+.config/copyq/copyq.lock
+
+# --- Machine state, caches, runtime ---
+.config/dconf
+.config/session
+.config/settings
+.config/tool_state
+.config/nextjs-nodejs
+.config/systemd
+.config/fish/fish_variables
+.cache
+.local/share/Trash
+
+# --- Backups made by hand ---
+**/*.bak
+**/*.bak-*
+**/*.orig
+
+# Repo-only files (not deployed to $HOME)
+bootstrap.sh
+packages
+README.md
