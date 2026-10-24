@@ -37,7 +37,7 @@ abbr gcmsg 'git commit -m'
 # abbr gmc 'geminicommit'
 
 # yt-dlp
-# abbr yta 'yt-dlp --embed-thumbnail -f "bestaudio/best" -ciw -o "%(title)s.%(ext)s" -v --extract-audio'
+abbr yta 'yt-dlp --embed-thumbnail -f "bestaudio/best" -ciw -o "%(title)s.%(ext)s" -v --extract-audio'
 # abbr yts 'yt-dlp --cookies-from-browser firefox'
 
 # Cloudflare Warp
