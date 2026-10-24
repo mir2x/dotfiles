@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
-# Flameshot region capture that works on one or many monitors:
-# the overlay spans the whole virtual desktop, so pin it to the top-left of
-# the bounding box of all monitors (may be negative) once its window appears.
+# Flameshot region capture. Under Hyprland the overlay spans the whole virtual
+# desktop, so pin it to the top-left of the bounding box of all monitors (may
+# be negative) once its window appears. Other compositors (dwl) have no IPC for
+# that, so just run flameshot; the dwl rule floats its window.
+if [ -z "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
+    exec flameshot gui "$@"
+fi
+
 read -r x y < <(hyprctl monitors -j | jq -r '[min_by(.x).x, min_by(.y).y] | "\(.[0]) \(.[1])"')
 
 flameshot gui "$@" &

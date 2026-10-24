@@ -68,7 +68,14 @@ echo "==> Dotfiles"
 chezmoi apply -v --force
 fc-cache -f   # pick up the Lilex fonts that chezmoi just downloaded
 
+echo "==> dwl (build and install from ~/.local/share/applications/dwl-custom)"
+dwl_src="$HOME/.local/share/applications/dwl-custom"
+rm -f "$dwl_src/config.h"   # regenerate from config.def.h
+make -C "$dwl_src" clean all
+sudo make -C "$dwl_src" install
+
 echo
-echo "Done. Next, by hand: set fish as the login shell (chsh -s /usr/bin/fish),"
+echo "Done. Start the desktop from a TTY with: start-dwl"
+echo "Next, by hand: set fish as the login shell (chsh -s /usr/bin/fish),"
 echo "restore your browser profiles from backup, run 'tailscale up',"
 echo "and put your Claude Code token in CLAUDE_CODE_OAUTH_TOKEN. Then reboot."

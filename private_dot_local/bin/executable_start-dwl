@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Start dwl with the environment Hyprland's config used to set (see hyprland.lua).
+export XDG_SESSION_TYPE=wayland
+export XDG_SESSION_DESKTOP=dwl
+export XDG_CURRENT_DESKTOP=dwl
+export XCURSOR_THEME=macOS-White
+export XCURSOR_SIZE=28
+export QT_QPA_PLATFORMTHEME=qt6ct
+export QT_QPA_PLATFORM="wayland;xcb"
+export XMODIFIERS=@im=fcitx
+export QT_IM_MODULE=fcitx
+export ELECTRON_OZONE_PLATFORM_HINT=auto
+if [ -r /proc/driver/nvidia/version ]; then
+    export LIBVA_DRIVER_NAME=nvidia NVD_BACKEND=direct
+fi
+# dwl reads its status text from stdin. exec + process substitution so this shell never
+# waits on dwl-status (it can hang in nvidia-smi); it ends on SIGPIPE after dwl exits.
+# stderr goes to a per-session log: if quit ever hangs, the last "dwl: cleanup:" line shows where.
+mkdir -p "$HOME/.cache"
+exec dwl "$@" < <(dwl-status) 2> "$HOME/.cache/dwl.log"

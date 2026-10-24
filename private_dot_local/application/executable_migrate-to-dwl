@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+# Move this machine from Hyprland to dwl using the chezmoi dotfiles.
+#
+#   migrate-to-dwl [-n] [-y]
+#     -n  dry run: print every command, change nothing
+#     -y  no prompts (pacman gets --noconfirm too)
+#
+# Order matters: dwl is built and installed BEFORE Hyprland is removed, so
+# there is always a working session. Safe to re-run.
+set -euo pipefail
+
+dry=0; yes=0
+while getopts ny o; do
+    case $o in n) dry=1 ;; y) yes=1 ;; *) echo "usage: $0 [-n] [-y]" >&2; exit 2 ;; esac
+done
+
+[ "$(id -u)" -ne 0 ] || { echo "Run as your normal user, not root." >&2; exit 1; }
+
+src="$HOME/.local/share/chezmoi"
+dwl="$HOME/.local/share/applications/dwl-custom"
+pm=(); [ "$yes" -eq 1 ] && pm=(--noconfirm)
+
+# Hyprland packages to remove. hyprlock stays, and so do its libraries
+# (hyprgraphics, hyprlang, hyprutils): pacman -Rns keeps anything still needed.
+remove=(hyprland hypridle hyprpaper xdg-desktop-portal-hyprland waybar)
+keep=(hyprlock hyprgraphics hyprlang hyprutils playerctl)  # playerctl: media keys
+
+run() { echo "+ $*"; [ "$dry" -eq 1 ] || "$@"; }
+
+confirm() {
+    [ "$yes" -eq 1 ] && return 0
+    read -r -p "$1 [y/N] " a; [[ $a == [yY]* ]]
+}
+
+echo "==> 1/5 Dotfiles (chezmoi update)"
+run chezmoi update -v
+
+echo "==> 2/5 Packages dwl needs"
+list="$src/packages/common.txt"
+if [ "$dry" -eq 1 ]; then
+    echo "+ grep -vE '^\\s*(#|\$)' $list | sudo pacman -S --needed ${pm[*]} -"
+else
+    grep -vE '^\s*(#|$)' "$list" | sudo pacman -S --needed "${pm[@]}" -
+fi
+
+echo "==> 3/5 Build and install dwl"
+run rm -f "$dwl/config.h"
+run make -C "$dwl" clean all
+run sudo make -C "$dwl" install
+
+echo "==> 4/5 Remove Hyprland packages"
+if [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
+    echo "You are inside Hyprland right now; removing it would kill this session."
+    echo "Log out, switch to a TTY, and run this script again."
+    exit 0
+fi
+
+# playerctl was pulled in by waybar but dwl's media keys use it
+run sudo pacman -D --asexplicit playerctl 2>/dev/null || true
+
+installed=()
+for p in "${remove[@]}"; do pacman -Qq "$p" >/dev/null 2>&1 && installed+=("$p"); done
+
+if [ "${#installed[@]}" -eq 0 ]; then
+    echo "Nothing to remove."
+else
+    # Dry-run the removal and refuse if it would take out anything we keep.
+    plan=$(pacman -Rs -p "${installed[@]}" 2>/dev/null || true)
+    for k in "${keep[@]}"; do
+        if grep -qE "(^| )$k-[0-9]" <<<"$plan"; then
+            echo "Refusing: removal would also remove '$k'. Not touching packages." >&2
+            exit 1
+        fi
+    done
+    echo "Would remove: $(tr '\n' ' ' <<<"$plan")"
+    if [ "$dry" -eq 1 ] || confirm "Remove these packages?"; then
+        run sudo pacman -Rns "${pm[@]}" "${installed[@]}"
+    else
+        echo "Skipped package removal."
+    fi
+fi
+
+echo "==> 5/5 Remove leftover Hyprland/waybar files"
+run rm -rf "$HOME/.config/waybar" "$HOME/.config/hypr/hyprland.lua" \
+    "$HOME/.config/hypr/hyprpaper.conf" "$HOME/.cache/hyprland" "$HOME/.local/share/hyprland"
+
+echo
+echo "Done. Log out, switch to a TTY and start the desktop with: start-dwl"

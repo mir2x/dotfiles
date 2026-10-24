@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+# Status line for dwl: prints one line per tick; dwl reads it on stdin (see start-dwl).
+# Mirrors the waybar modules: volume, net, disk, cpu, gpu, mem, swap, battery, clock.
+# Exits by itself via SIGPIPE when dwl closes the pipe.
+
+BAT=/sys/class/power_supply/BAT1
+
+human() { # bytes/s -> 1.2M / 340K / 0B
+    local b=$1
+    if   (( b >= 1048576 )); then printf '%d.%dM' $((b/1048576)) $((b%1048576*10/1048576))
+    elif (( b >= 1024 ));    then printf '%dK' $((b/1024))
+    else printf '%dB' "$b"; fi
+}
+
+read -r _ u n s i _ < /proc/stat; pt=$((u+n+s+i)); pi=$i
+iface=; rx0=0; tx0=0; tick=0; gpu=; disk=
+sleep 1 # so the first cpu sample covers a real interval
+
+while :; do
+    # cpu
+    read -r _ u n s i w q sq _ < /proc/stat; t=$((u+n+s+i+w+q+sq)); idle=$((i+w))
+    dt=$((t-pt)); cpu=$(( dt ? 100*(dt-(idle-pi))/dt : 0 )); pt=$t; pi=$idle
+
+    # memory + swap (GiB / MiB)
+    while read -r k v _; do
+        case $k in
+            MemTotal:) mt=$v;; MemAvailable:) ma=$v;; SwapTotal:) st=$v;; SwapFree:) sf=$v;;
+        esac
+    done < /proc/meminfo
+    mem=$(( (mt-ma)/1048576 )).$(( (mt-ma)%1048576*10/1048576 ))
+    swap=$(( (st-sf)/1024 ))M
+
+    # network: follow the default route's interface, speed over the last interval
+    cur=$(ip route show default 2>/dev/null | awk '{for(i=1;i<NF;i++) if($i=="dev"){print $(i+1); exit}}')
+    if [[ -n $cur && -r /sys/class/net/$cur/statistics/rx_bytes ]]; then
+        read -r rx < /sys/class/net/$cur/statistics/rx_bytes
+        read -r tx < /sys/class/net/$cur/statistics/tx_bytes
+        if [[ $cur == "$iface" ]]; then
+            net="down $(human $(((rx-rx0)/2))) up $(human $(((tx-tx0)/2)))"
+        else
+            net="down 0B up 0B"
+        fi
+        iface=$cur; rx0=$rx; tx0=$tx
+    else
+        iface=; net=offline
+    fi
+
+    # slow items every 5th tick (~10s): gpu and disk
+    if (( tick % 5 == 0 )); then
+        gpu=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null | head -1)
+        disk=$(df -h --output=used,size /home | awk 'NR==2{print $1 " / " $2}')
+    fi
+    tick=$((tick+1))
+
+    # volume
+    vol=$(pactl get-sink-volume @DEFAULT_SINK@ 2>/dev/null | grep -o '[0-9]*%' | head -1)
+    [[ $(pactl get-sink-mute @DEFAULT_SINK@ 2>/dev/null) == *yes ]] && vol=muted
+
+    # bluetooth: grey "bt off" / "bt on", or green with the connected device names
+    bt=
+    if shw=$(bluetoothctl show 2>/dev/null) && [[ -n $shw ]]; then
+        names=
+        while read -r _ _ name; do names+="${names:+,}${name:0:14}"; done < <(bluetoothctl devices Connected 2>/dev/null)
+        if   [[ -n $names ]];                then bt="^fg(c3e88d)bt $names^fg()  "
+        elif [[ $shw == *"Powered: yes"* ]]; then bt="^fg(565f89)bt on^fg()  "
+        else                                      bt="^fg(565f89)bt off^fg()  "; fi
+    fi
+
+    # battery: green-teal, yellow <=25%, red <=10% (waybar thresholds)
+    if [[ -r $BAT/capacity ]]; then
+        read -r cap < $BAT/capacity; read -r bs < $BAT/status
+        bc=2ac3de; (( cap <= 25 )) && bc=e0af68; (( cap <= 10 )) && bc=f7768e
+        [[ $bs == Charging ]] && btxt="${cap}%+" || btxt="${cap}%"
+        b="^fg($bc)bat $btxt^fg()  "
+    else b=; fi
+
+    # ^fg(rrggbb) colours need the barcolors-style support in dwl.c; Tokyo Night palette
+    [[ -n $gpu ]] && g="^fg(73daca)gpu ${gpu}%^fg()  " || g=
+    printf '^fg(bb9af7)vol %s^fg()  %s^fg(7dcfff)%s^fg()  ^fg(e0af68)disk %s^fg()  ^fg(9ece6a)cpu %s%%^fg()  %s^fg(ff9e64)mem %s GiB^fg()  ^fg(7aa2f7)swap %s^fg()  %s^fg(c0caf5)%(%a %d %b  %I:%M %p)T^fg()\n' \
+        "${vol:-?}" "$bt" "$net" "$disk" "$cpu" "$g" "$mem" "$swap" "$b" -1
+    sleep 2
+done
